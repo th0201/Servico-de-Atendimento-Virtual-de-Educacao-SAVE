@@ -1,26 +1,24 @@
-
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
-//import java.time.LocalTime;
 
 public class Matricula extends Aluno {
     private String nomeDaInstituicao;
     private int anoLetivo;
+    private String curso;
+    private static List<Matricula> matriculas = new ArrayList<>();
 
-    protected static List<Matricula> matriculas = new ArrayList<>();
-
-    
     public Matricula(String nome, String sobrenome, String cpf, String telefone, String cidade, String bairro,
-    String rua, String numero, String email, LocalDate dataNascimento, String rg, String nomeDaMae, String nomeDoPai,
-    boolean atendimentoEspecial, String matricula, String curso, String nomeDaInstituicao, int anoLetivo) {
-        super(nome, sobrenome, cpf, telefone, cidade, bairro, rua, numero, email, dataNascimento, rg, nomeDaMae, nomeDoPai, atendimentoEspecial, matricula, curso);
+                     String rua, String numero, String email, LocalDate dataNascimento, String rg, String nomeDaMae,
+                     String nomeDoPai, boolean atendimentoEspecial,  
+                     String nomeDaInstituicao, int anoLetivo, String curso) {
+        super(nome, sobrenome, cpf, telefone, cidade, bairro, rua, numero, email, dataNascimento, rg, nomeDaMae,
+                nomeDoPai, atendimentoEspecial);
         this.nomeDaInstituicao = nomeDaInstituicao;
         this.anoLetivo = anoLetivo;
-}
+        this.curso = curso;
+    }
 
     public String getNomeDaInstituicao() {
         return nomeDaInstituicao;
@@ -38,58 +36,50 @@ public class Matricula extends Aluno {
         this.anoLetivo = anoLetivo;
     }
 
-    public static void criarMatricula(Scanner scanner) {
-
-        System.out.print("Digite o nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("Digite o sobrenome: ");
-        String sobrenome = scanner.nextLine();
-        System.out.print("Digite o CPF: ");
-        String cpf = scanner.nextLine();
-
-        System.out.print("Digite o telefone: ");
-        String telefone = scanner.nextLine();
-        System.out.print("Digite a cidade: ");
-        String cidade = scanner.nextLine();
-        System.out.print("Digite o bairro: ");
-        String bairro = scanner.nextLine();
-        System.out.print("Digite a rua: ");
-        String rua = scanner.nextLine();
-        System.out.print("Digite o número: ");
-        String numero = scanner.nextLine();
-        System.out.print("Digite o email: ");
-        String email = scanner.nextLine();
-        System.out.print("Digite a data de nascimento (AAAA-MM-DD): ");
-        String dataNascimentoStr = scanner.nextLine();
-        LocalDate dataNascimento = LocalDate.parse(dataNascimentoStr);
-        System.out.print("Digite o RG: ");
-        String rg = scanner.nextLine();
-        System.out.print("Digite o nome da mãe: ");
-        String nomeDaMae = scanner.nextLine();
-        System.out.print("Digite o nome do pai: ");
-        String nomeDoPai = scanner.nextLine();
-        System.out.print("O aluno precisa de atendimento especial? (true/false): ");
-        boolean atendimentoEspecial = scanner.nextBoolean();
-        scanner.nextLine(); // Limpar o buffer do scanner
-        System.out.print("Digite a matrícula do aluno: ");
-        String matricula = scanner.nextLine();
-        System.out.print("Digite o curso do aluno: ");
-        String curso = scanner.nextLine();
-
-        
-        System.out.println("Digite o nome da instituição:");
-        String nomeDaInstituicao = scanner.nextLine();
-
-        System.out.println("Digite o ano letivo:");
-        int anoLetivo = scanner.nextInt();
-        scanner.nextLine(); // Limpar o buffer do scanner
-
-        Matricula novaMatricula = new Matricula(nome, sobrenome, cpf, telefone, cidade, bairro, rua, numero, email,
-        dataNascimento, rg, nomeDaMae, nomeDoPai, atendimentoEspecial, matricula, curso, nomeDaInstituicao, anoLetivo);
-        matriculas.add(novaMatricula);
-        System.out.println("Matrícula criada com sucesso: " + novaMatricula);
+    public String getCurso() {
+        return curso;
     }
 
+    public void setCurso(String curso) {
+        this.curso = curso; 
+    }
+
+    public static void criarMatricula(Scanner scanner) {
+        System.out.print("Digite o CPF do aluno: ");
+        String cpf = scanner.nextLine().trim();
+    
+        // Verificar se o CPF corresponde a algum aluno
+        Aluno aluno = null;
+        for (Aluno a : Aluno.alunos) {
+            if (a.getCpf().equals(cpf)) {
+                aluno = a;
+                break;
+            }
+        }
+    
+        if (aluno != null) {
+            // Criar a matrícula com base nos dados do aluno
+            System.out.println("Digite o nome da instituição:");
+            String nomeDaInstituicao = scanner.nextLine();
+            System.out.println("Digite o ano letivo:");
+            int anoLetivo = scanner.nextInt();
+            scanner.nextLine(); // Limpar o buffer do scanner
+            System.out.print("Digite o curso do aluno: ");
+            String curso = scanner.nextLine();
+    
+            // Criar a matrícula com base nos dados do aluno
+            Matricula matricula = new Matricula(aluno.getNome(), aluno.getSobrenome(),
+                    aluno.getCpf(), aluno.getTelefone(), aluno.getCidade(), aluno.getBairro(),
+                    aluno.getRua(), aluno.getNumero(), aluno.getEmail(), aluno.getDataNascimento(),
+                    aluno.getRg(), aluno.getNomeDaMae(), aluno.getNomeDoPai(), aluno.isAtendimentoEspecial(),
+                    nomeDaInstituicao, anoLetivo, curso);
+            Matricula.matriculas.add(matricula); // Adiciona a matrícula à lista de matrículas
+            System.out.println("Matrícula criada com sucesso!");
+        } else {
+            System.out.println("Erro: Aluno não encontrado com o CPF fornecido!");
+        }
+    }
+    
     public static void listarMatriculas() {
         if (matriculas.isEmpty()) {
             System.out.println("Nenhum aluno cadastrado.");
@@ -108,7 +98,6 @@ public class Matricula extends Aluno {
                 System.out.println("Email: " + matricula.getEmail());
                 System.out.println("Data de Nascimento: " + matricula.getDataNascimento());
                 System.out.println("RG: " + matricula.getRg());
-                System.out.println("Matrícula: " + matricula.getMatricula());
                 System.out.println("Curso: " + matricula.getCurso());
                 System.out.println("Nome da instituição: " + matricula.getNomeDaInstituicao());
                 System.out.println("Ano letivo: " + matricula.getAnoLetivo());
@@ -116,6 +105,48 @@ public class Matricula extends Aluno {
             }
         }
     }
+
+    public static void visualizarMatricula(Scanner scanner) {
+        if (matriculas.isEmpty()) {
+            System.out.println("Não há matrículas para visualizar.");
+            return;
+        }
+    
+        // Listar matrículas para selecionar qual visualizar
+        listarMatriculas();
+        System.out.println("Digite o índice da matrícula que deseja visualizar:");
+        int indice = scanner.nextInt();
+        scanner.nextLine(); // Limpar o buffer do scanner
+    
+        if (indice >= 0 && indice < matriculas.size()) {
+            Matricula matriculaSelecionada = matriculas.get(indice);
+    
+            // Exibir os dados da matrícula selecionada
+            System.out.println("Dados da Matrícula:");
+            System.out.println("Nome da instituição: " + matriculaSelecionada.getNomeDaInstituicao());
+            System.out.println("Ano letivo: " + matriculaSelecionada.getAnoLetivo());
+            System.out.println("Curso: " + matriculaSelecionada.getCurso());
+    
+            // Exibir os dados herdados da classe Aluno
+            System.out.println("Dados do Aluno:");
+            System.out.println("Nome: " + matriculaSelecionada.getNome());
+            System.out.println("CPF: " + matriculaSelecionada.getCpf());
+            System.out.println("Telefone: " + matriculaSelecionada.getTelefone());
+            System.out.println("Cidade: " + matriculaSelecionada.getCidade());
+            System.out.println("Bairro: " + matriculaSelecionada.getBairro());
+            System.out.println("Rua: " + matriculaSelecionada.getRua());
+            System.out.println("Número: " + matriculaSelecionada.getNumero());
+            System.out.println("Email: " + matriculaSelecionada.getEmail());
+            System.out.println("Data de Nascimento: " + matriculaSelecionada.getDataNascimento());
+            System.out.println("RG: " + matriculaSelecionada.getRg());
+            System.out.println("Nome da Mãe: " + matriculaSelecionada.getNomeDaMae());
+            System.out.println("Nome do Pai: " + matriculaSelecionada.getNomeDoPai());
+            System.out.println("Atendimento Especial: " + matriculaSelecionada.isAtendimentoEspecial());
+        } else {
+            System.out.println("Índice inválido.");
+        }
+    }
+    
 
     public static void removerMatricula(Scanner scanner) {
         if (matriculas.isEmpty()) {
@@ -151,10 +182,14 @@ public class Matricula extends Aluno {
                     System.out.println("Digite o novo ano letivo:");
                     int novoAno = scanner.nextInt();
                     scanner.nextLine(); // Limpar o buffer do scanner
+
+                    System.out.println("Digite o novo nome do Curso");
+                    String novoCurso = scanner.nextLine();
     
                     Matricula matriculaEditada = matriculas.get(indice);
                     matriculaEditada.setNomeDaInstituicao(novoNome);
                     matriculaEditada.setAnoLetivo(novoAno);
+                    matriculaEditada.setCurso(novoCurso);
     
                     System.out.println("Matrícula editada com sucesso: " + matriculaEditada);
                 } else {
