@@ -1,7 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.time.LocalTime;
 import java.util.List;
 
 public class Instituicao  extends Administrador{
@@ -48,81 +47,165 @@ public class Instituicao  extends Administrador{
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
     }
-
-    public static void cadastrarInstituicao(Scanner scanner) {
-        System.out.println("Cadastrar Nova Instituição:");
-        System.out.print("Nome: ");
-        String nomeDaInstituicao = scanner.nextLine();
+   
+    // metodo para criar um colegio
+    public static void criarInstituicao(Scanner scanner) {
+        // Solicita os dados do administrador responsável pela instituição
+        System.out.println("Digite os dados do administrador responsável pela instituição:");
+        System.out.print("CPF do administrador: ");
+        String cpfAdministrador = scanner.nextLine();
+    
+        // Verifica se o CPF fornecido corresponde a um usuário existente
+        boolean usuarioValido = false;
+        Administrador administrador = null;
+        for (Administrador adm : Administrador.administradores) {
+            if (adm.getCpf().equals(cpfAdministrador)) {
+                usuarioValido = true;
+                administrador = adm;
+                break;
+            }
+        }
+    
+        if (!usuarioValido) {
+            System.out.println("Erro: CPF do administrador não corresponde a um usuário existente.");
+            return;
+        }
+    
+        // Solicita os dados específicos da instituição
+        System.out.println("\nDigite os dados da instituição:");
+    
+        System.out.print("Nome da Instituição: ");
+        String nomeInstituicao = scanner.nextLine();
+    
         System.out.print("Endereço: ");
         String endereco = scanner.nextLine();
-        
+    
+        System.out.print("CNPJ: ");
         String cnpj = scanner.nextLine();
-
-        Instituicao instituicao = new Instituicao(nomeInstituicao, endereco, cnpj);
-        instituicoes.add(instituicao);
+    
+        // Cria a instituição com os dados fornecidos
+        Instituicao instituicao = new Instituicao(administrador.getNome(), administrador.getSobrenome(),
+                administrador.getCpf(), administrador.getTelefone(), administrador.getCidade(),
+                administrador.getBairro(), administrador.getRua(), administrador.getNumero(),
+                administrador.getEmail(), administrador.getDataNascimento(), administrador.getRg(),
+                nomeInstituicao, endereco, cnpj);
+    
+        // Adiciona a instituição à lista de instituições
+        Instituicao.instituicoes.add(instituicao);
+    
         System.out.println("Instituição cadastrada com sucesso!");
     }
-
+    
+    // metodo para fazer uma lista das instituições
     public static void listarInstituicoes() {
         if (instituicoes.isEmpty()) {
             System.out.println("Nenhuma instituição cadastrada.");
         } else {
             System.out.println("Lista de Instituições:");
-            for (Instituicao instituicao : instituicoes) {
-                System.out.println(instituicao);
+            for (int i = 0; i < instituicoes.size(); i++) {
+                Instituicao instituicao = instituicoes.get(i);
+                System.out.println("Índice: " + i);
+                System.out.println("Nome da Instituição: " + instituicao.getNomeInstituicao());
+                System.out.println("Endereço: " + instituicao.getEndereco());
+                System.out.println("CNPJ: " + instituicao.getCnpj());
+                System.out.println("Responsável: " + instituicao.getNome() + " " + instituicao.getSobrenome());
+                System.out.println("----------------------------------");
             }
         }
     }
 
-    public static void removerInstituicao(Scanner scanner) {
-        if (instituicoes.isEmpty()) {
-            System.out.println("Nenhuma instituição cadastrada para remover.");
-        } else {
-            listarInstituicoes();
-            System.out.print("Digite o número da instituição que deseja remover: ");
-            int numero = scanner.nextInt();
-            scanner.nextLine(); // Limpa o buffer do scanner
-
-            if (numero >= 0 && numero < instituicoes.size()) {
-                instituicoes.remove(numero);
-                System.out.println("Instituição removida com sucesso!");
-            } else {
-                System.out.println("Número de instituição inválido.");
-            }
-        }
-    }
-
+    // metodo para editar um instituição
     public static void editarInstituicao(Scanner scanner) {
         if (instituicoes.isEmpty()) {
-            System.out.println("Nenhuma instituição cadastrada para editar.");
+            System.out.println("Não há instituições cadastradas para editar.");
         } else {
+            // Listar todas as instituições para escolher qual editar
             listarInstituicoes();
-            System.out.print("Digite o número da instituição que deseja editar: ");
-            int numero = scanner.nextInt();
-            scanner.nextLine(); // Limpa o buffer do scanner
-
-            if (numero >= 0 && numero < instituicoes.size()) {
-                Instituicao instituicao = instituicoes.get(numero);
-
-                System.out.println("Editando Instituição:");
-                System.out.print("Novo nome (atual: " + instituicao.getNome() + "): ");
-                String novoNome = scanner.nextLine();
-                instituicao.setNome(novoNome);
-
-                System.out.print("Novo endereço (atual: " + instituicao.getEndereco() + "): ");
+    
+            // Solicitar o índice da instituição a ser editada
+            System.out.print("Digite o índice da instituição que deseja editar: ");
+            int indice = scanner.nextInt();
+            scanner.nextLine(); // Limpar o buffer do scanner
+    
+            // Verificar se o índice fornecido é válido
+            if (indice >= 0 && indice < instituicoes.size()) {
+                Instituicao instituicao = instituicoes.get(indice);
+    
+                // Solicitar novos dados para a instituição
+                System.out.println("Digite os novos dados da instituição:");
+    
+                System.out.print("Novo Nome da Instituição: ");
+                String novoNomeInstituicao = scanner.nextLine();
+    
+                System.out.print("Novo Endereço: ");
                 String novoEndereco = scanner.nextLine();
-                instituicao.setEndereco(novoEndereco);
-                               
-                System.out.print("Novo CNPJ (atual: " + instituicao.getCnpj() + "): ");
+    
+                System.out.print("Novo CNPJ: ");
                 String novoCnpj = scanner.nextLine();
+    
+                // Atualizar os dados da instituição
+                instituicao.setNomeInstituicao(novoNomeInstituicao);
+                instituicao.setEndereco(novoEndereco);
                 instituicao.setCnpj(novoCnpj);
-
+    
                 System.out.println("Instituição editada com sucesso!");
             } else {
-                System.out.println("Número de instituição inválido.");
+                System.out.println("Índice inválido!");
             }
         }
     }
 
-   
+    
+
+    //metodo para visualizar os cadastro de colegios
+    public static void visualizarInstituicao(Scanner scanner) {
+        if (instituicoes.isEmpty()) {
+            System.out.println("Não há instituições para visualizar.");
+            return;
+        }
+    
+        // Listar instituições para selecionar qual visualizar
+        listarInstituicoes();
+        System.out.println("Digite o índice da instituição que deseja visualizar:");
+        int indice = scanner.nextInt();
+        scanner.nextLine(); // Limpar o buffer do scanner
+    
+        if (indice >= 0 && indice < instituicoes.size()) {
+            Instituicao instituicaoSelecionada = instituicoes.get(indice);
+    
+            // Exibir os detalhes da instituição selecionada
+            System.out.println("Detalhes da Instituição:");
+            System.out.println("Nome da Instituição: " + instituicaoSelecionada.getNomeInstituicao());
+            System.out.println("Endereço: " + instituicaoSelecionada.getEndereco());
+            System.out.println("CNPJ: " + instituicaoSelecionada.getCnpj());
+        } else {
+            System.out.println("Índice inválido.");
+        }
+    }
+    
+    //metodo para apagar um colegio
+    public static void removerInstituicao(Scanner scanner) {
+        if (instituicoes.isEmpty()) {
+            System.out.println("Não há instituições para remover.");
+            return;
+        }
+    
+        // Listar instituições para selecionar qual remover
+        listarInstituicoes();
+        System.out.println("Digite o índice da instituição que deseja remover:");
+        int indice = scanner.nextInt();
+        scanner.nextLine(); // Limpar o buffer do scanner
+    
+        if (indice >= 0 && indice < instituicoes.size()) {
+            Instituicao instituicaoRemover = instituicoes.get(indice);
+    
+            // Remover a instituição selecionada da lista
+            instituicoes.remove(instituicaoRemover);
+            System.out.println("Instituição removida com sucesso!");
+        } else {
+            System.out.println("Índice inválido.");
+        }
+    }
+    
+  
 }
