@@ -1,26 +1,19 @@
-//import java.time.LocalDate;
-//import java.util.ArrayList;
 import java.util.Scanner;
-//import java.time.LocalTime;
-//import java.util.List;
+import java.util.List;
+import java.util.ArrayList;
 
-
-
-
-
-public class App   {
-
+public class App {
 
     public static void main(String[] args) {
 
-
-
         Scanner scanner = new Scanner(System.in);
+        
+
+
+
         int opcaoUsuario;
 
-
-
-            do {
+        do {
             System.out.println("Menu:");
             System.out.println("1 - Criar usuário");
             System.out.println("2 - Editar usuário");
@@ -52,7 +45,7 @@ public class App   {
                     break;
                 case 6:
                     CadastrarAluno();
-                    break; 
+                    break;
                 case 7:
                     menuADM(scanner);
                     break;
@@ -68,6 +61,7 @@ public class App   {
     }
 
     public static void menuADM(Scanner scanner) {
+        List<Usuario> usuarios = new ArrayList<>();
         int opcaoAdministrador;
 
         do {
@@ -76,8 +70,9 @@ public class App   {
             System.out.println("2 - Listar Administradores");
             System.out.println("3 - Editar Administrador");
             System.out.println("4 - Remover Administrador");
-            System.out.println("5 - Criar Instituição");
-            System.out.println("6 - Sair");
+            System.out.println("5 - visualizar Administrador");
+            System.out.println("6 - Criar Instituição");
+            System.out.println("7 - Sair");
             System.out.print("Escolha uma opção: ");
             opcaoAdministrador = scanner.nextInt();
             scanner.nextLine(); // Limpa o buffer do scanner
@@ -96,18 +91,20 @@ public class App   {
                     Administrador.removerAdministrador(scanner);
                     break;
                 case 5:
-                    menuInstituicao(scanner);
-                    break;
+                    Administrador.visualizarAdministrador(scanner);    
                 case 6:
+                    menuInstituicao(scanner, usuarios);
+                    break;
+                case 7:
                     System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida.");
             }
-        } while (opcaoAdministrador != 6);
+        } while (opcaoAdministrador != 7);
     }
 
-    public static void menuInstituicao(Scanner scanner) {
+    public static void menuInstituicao(Scanner scanner, List<Usuario> usuarios) {
         int opcaoInstituicao;
 
         do {
@@ -115,14 +112,17 @@ public class App   {
             System.out.println("1 - Cadastrar Instituição");
             System.out.println("2 - Listar Instituições");
             System.out.println("3 - Remover Instituição");
-            System.out.println("4 - Sair");
+            System.out.println("4 - Editar Instituição");
+            System.out.println("5 - Visualizar Instituição");
+            System.out.println("6 - Cadastrar notas");
+            System.out.println("7 - Sair");
             System.out.print("Escolha uma opção: ");
             opcaoInstituicao = scanner.nextInt();
             scanner.nextLine(); // Limpa o buffer do scanner
 
             switch (opcaoInstituicao) {
                 case 1:
-                    Instituicao.cadastrarInstituicao(scanner);
+                    Instituicao.criarInstituicao(scanner);
                     break;
                 case 2:
                     Instituicao.listarInstituicoes();
@@ -131,12 +131,65 @@ public class App   {
                     Instituicao.removerInstituicao(scanner);
                     break;
                 case 4:
+                    Instituicao.editarInstituicao(scanner);
+                    break;
+                case 5:
+                    Instituicao.visualizarInstituicao(scanner);
+                    break;
+                case 6:
+                    cadastrarNotas(scanner, usuarios);
+                    break;
+                  
+                case 7:
                     System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida.");
             }
-        } while (opcaoInstituicao != 4);
+        } while (opcaoInstituicao != 7);
+    }
+
+    public static void cadastrarNotas(Scanner scanner, List<Usuario> usuarios) {
+        //Instituicao instituicao = new Instituicao();
+        int opcaoNotas;
+
+        do {
+            System.out.println("Menu de notas");
+            System.out.println("1 - Cadastar notas de alunos");
+            System.out.println("2 - Listar notas de alunos");
+            System.out.println("3 - Editar notas de alunos");
+            System.out.println("4 - Remover notas de alunos");
+            System.out.println("5 - visualizar notas dos alunos");
+            System.out.println("7 - Sair");
+            System.out.print("Escolha uma opção: ");
+            opcaoNotas = scanner.nextInt();
+            scanner.nextLine(); // Limpa o buffer do scanner
+
+            switch (opcaoNotas) {
+                case 1:
+                    //Notas.adicionarNotas(scanner, usuarios, instituicao);
+                    break;
+                case 2:
+                    Notas.listarUsuarios(usuarios);
+                    break;
+                case 3:
+                    Notas.editarNotas(scanner, usuarios);
+                    break;
+                case 4:
+                    Notas. removerNotas(scanner, usuarios);
+                    break;
+                case 5:
+                    Notas.visualizarNotas(scanner, usuarios);    
+                case 6:
+                    menuInstituicao(scanner, usuarios);
+                    break;
+                case 7:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (opcaoNotas != 7);
     }
 
     public static void CadastrarAluno() {
@@ -149,18 +202,20 @@ public class App   {
             System.out.println("2 - Editar Aluno");
             System.out.println("3 - Remover Aluno");
             System.out.println("4 - Listar Aluno");
-            System.out.println("5 - Agendamento de reunião");
-            System.out.println("6 - Criar Matrícula");
-            System.out.println("7 - Entrar em uma turma");
-            System.out.println("8 - Sair");
+            System.out.println("5 - Visualizar Aluno");
+            System.out.println("6 - Agendamento de reunião"); //menu de agendamento
+            System.out.println("7 - Criar Matrícula");        //menu de matricula  
+            System.out.println("8 - Entrar em uma turma");    //menu de cadastramento na turma
+            System.out.println("9 - Sair");
             System.out.print("Escolha uma opção: ");
             opcao1 = scanner.nextInt();
             scanner.nextLine(); // Limpa o buffer do scanner
 
             switch (opcao1) {
                 case 1:
-                    Aluno.criarAluno(scanner);
-                    break;
+                    //Usuario usuario = Usuario.criarUsuario(scanner);
+                    Aluno.criarAluno( scanner);// Dessa forma vai chamar tando o objeto quanto o scanner
+                    break;                                // Só o scanner está dando erro 
                 case 2:
                     Aluno.editarAluno(scanner);
                     break;
@@ -171,6 +226,9 @@ public class App   {
                     Aluno.listarAlunos();
                     break;
                 case 5:
+                    Aluno. visualizarAluno(scanner);
+                    break;    
+                case 6:
                  Scanner scannerReuniao = new Scanner(System.in);
                 int opcaoAgendamento;
                 do {
@@ -179,33 +237,36 @@ public class App   {
                     System.out.println("2 - Editar Reunião");
                     System.out.println("3 - Remover Reunião");
                     System.out.println("4 - Listar Reuniões");
-                    System.out.println("5 - Voltar ao Menu Principal");
+                    System.out.println("5 - Visualizar Reuniões");
+                    System.out.println("6 - Voltar ao Menu Principal");
                     System.out.print("Escolha uma opção: ");
                     opcaoAgendamento = scanner.nextInt();
                     scanner.nextLine(); // Limpar o buffer do scanner
 
                     switch (opcaoAgendamento) {
                         case 1:
-                        AgendamentoReuniao.criarReuniao(scannerReuniao);
+                            AgendamentoReuniao.criarReuniao(scannerReuniao);
                             break;
                         case 2:
-                        AgendamentoReuniao.editarReuniao(scannerReuniao);
+                            AgendamentoReuniao.editarReuniao(scannerReuniao);
                             break;
                         case 3:
-                        AgendamentoReuniao.removerReuniao(scannerReuniao);
+                            AgendamentoReuniao.removerReuniao(scannerReuniao);
                             break;
                         case 4:
-                        AgendamentoReuniao.listarReunioes();
+                            AgendamentoReuniao.listarReunioes();
                             break;
                         case 5:
+                            AgendamentoReuniao.visualizarAgendamento(scannerReuniao);
+                        case 6:
                             System.out.println("Voltando ao Menu Principal...");
                             break;
                         default:
                             System.out.println("Opção inválida.");
                     }
-                } while (opcaoAgendamento != 5);
+                } while (opcaoAgendamento != 6);
                     break;
-                case 6:
+                case 7:
                 Scanner scannerMatricula = new Scanner(System.in);
                    int opcaoMatricula;
                     do {
@@ -214,7 +275,8 @@ public class App   {
                         System.out.println("2 - Listar Matrículas");
                         System.out.println("3 - Editar Matrícula");
                         System.out.println("4 - Remover Matrícula");
-                        System.out.println("5 - Voltar ao Menu Principal");
+                        System.out.println("5 - visualizar Matrícula");
+                        System.out.println("6 - Voltar ao Menu Principal");
                         System.out.print("Escolha uma opção: ");
                         opcaoMatricula = scanner.nextInt();
                         scanner.nextLine(); // Limpar o buffer do scanner
@@ -233,22 +295,26 @@ public class App   {
                                 Matricula.removerMatricula(scannerMatricula);
                                 break;
                             case 5:
+                                Matricula.visualizarMatricula(scannerMatricula);    
+                            case 6:
                                 System.out.println("Voltando ao Menu Principal...");
                                 break;
                             default:
                                 System.out.println("Opção inválida.");
                         }
-                    } while (opcaoMatricula != 5);
+                    } while (opcaoMatricula != 6);
                     break;
-                case 7:
+                case 8:
                 Scanner scannerDisciplina = new Scanner(System.in);
                 int opcaoDisciplina;
                 do {
-                    System.out.println("\nMenu de Disciplina:");
-                    System.out.println("1 - Criar Disciplina");
-                    System.out.println("2 - Listar Disciplinas");
-                    System.out.println("3 - Remover Disciplina");
-                    System.out.println("4 - Voltar ao Menu Principal");
+                    System.out.println("\nMenu matrícular nas Disciplinas:");
+                    System.out.println("1 - Criar matrícula na disciplina");
+                    System.out.println("2 - Listar quantidade de alunos na Disciplinas");
+                    System.out.println("3 - editar Disciplina");
+                    System.out.println("4 - visualizar Disciplina");
+                    System.out.println("5 - Remover Disciplina");
+                    System.out.println("6 - Voltar ao Menu Principal");
                     System.out.print("Escolha uma opção: ");
                     opcaoDisciplina = scanner.nextInt();
                     scanner.nextLine(); // Limpar o buffer do scanner
@@ -260,64 +326,32 @@ public class App   {
                         case 2:
                             Disciplina.listarDisciplina();
                             break;
-                        
                         case 3:
-                            Disciplina.removerDisciplina(scannerDisciplina);
+                            Disciplina.editarDisciplina(scannerDisciplina);
                             break;
                         case 4:
+                            Disciplina.visualizarDisciplina(scannerDisciplina);
+                            break;    
+                        case 5:
+                            Disciplina.removerDisciplina(scannerDisciplina);
+                            break;
+                        case 6:
                             System.out.println("Voltando ao Menu Principal...");
                             break;
                         default:
                             System.out.println("Opção inválida.");
                     }
-                } while (opcaoDisciplina != 4);
+                } while (opcaoDisciplina != 6);
                 break;    
-                case 8:
+                case 9:
                     System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida.");
             }
-        } while (opcao1 != 8);
+        } while (opcao1 != 9);
 
         scanner.close();
     }
-
-    // Scanner scanner = new Scanner(System.in);
-    //     int opcao1;
-
-    //     do {
-    //         System.out.println("Menu:");
-    //         System.out.println("1 - Cadastrar professor");
-    //         System.out.println("2 - Editar professor");
-    //         System.out.println("3 - Remover professor");
-    //         System.out.println("4 - Listar professor");
-    //         System.out.println("5 - Sair");
-    //         System.out.print("Escolha uma opção: ");
-    //         opcao1 = scanner.nextInt();
-    //         scanner.nextLine(); // Limpa o buffer do scanner
-
-    //         switch (opcao1) {
-    //             case 1:
-    //                 cadastrarProfessor(scanner);
-    //                 break;
-    //             case 2:
-    //                 editarProfessor(scanner);
-    //                 break;
-    //             case 3:
-    //                 removerProfessor(scanner);
-    //                 break;
-    //             case 4:
-    //                 listarProfessor();
-    //                 break;
-    //             case 5:
-    //                 System.out.println("Saindo...");
-    //                 break;
-    //             default:
-    //                 System.out.println("Opção inválida.");
-    //         }
-    //     } while (opcao1 != 7);
-
-    //     scanner.close();
-    // }
+   
 }
